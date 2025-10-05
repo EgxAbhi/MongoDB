@@ -1,3 +1,59 @@
+const mongoose = require('mongoose');
+
+const productSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Product name is required'],
+    trim: true
+  },
+  price: {
+    type: Number,
+    required: [true, 'Product price is required'],
+    min: [0, 'Price cannot be negative']
+  },
+  category: {
+    type: String,
+    required: [true, 'Product category is required'],
+    trim: true
+  }
+}, {
+  timestamps: true,
+  versionKey: '__v'
+});
+
+const Product = mongoose.model('Product', productSchema);
+
+module.exports = Product;
+
+const express = require('express');
+const router = express.Router();
+
+// Sample data
+const data = [];
+
+// GET endpoint
+router.get('/data', (req, res) => {
+    res.json(data);
+});
+
+// POST endpoint
+router.post('/data', (req, res) => {
+    const newItem = req.body;
+    data.push(newItem);
+    res.json(newItem);
+});
+
+// PUT endpoint
+router.put('/data/:id', (req, res) => {
+    const id = req.params.id;
+    const updatedItem = req.body;
+    data[id] = updatedItem;
+    res.json(updatedItem);
+});
+
+module.exports = router;
+
+
 const express = require('express');
 const mongoose = require('mongoose');
 const productRoutes = require('./routes/products');
